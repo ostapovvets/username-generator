@@ -1,0 +1,105 @@
+{% extends "layout.html" %}
+
+{% block body %}
+
+<header class="page-header">
+    <div>
+        <h1>Username Generator</h1>
+        <p class="subtitle">Generate usernames with a local model and check whether they're free.</p>
+    </div>
+
+    <!-- theme switch + button color, saved in the browser by theme.js -->
+    <div class="appearance">
+        <div class="theme-switch" role="group" aria-label="Theme">
+            <button type="button" data-theme-choice="light">Light</button>
+            <button type="button" data-theme-choice="dark">Dark</button>
+            <button type="button" data-theme-choice="amoled">AMOLED</button>
+        </div>
+        <label class="color-picker" title="Button color">
+            <input type="color" id="accent-picker">
+        </label>
+        <button type="button" id="accent-reset" class="link-button" hidden>Reset color</button>
+    </div>
+</header>
+
+<div class="columns">
+    <section class="card">
+        <h2>Settings</h2>
+
+        <form id="settings">
+            <div class="field">
+                <label for="model">Model</label>
+                <select id="model" name="model">
+                    {% for model in models %}
+                        <option value="{{ model }}" {% if model.startswith("name-engine") %}selected{% endif %}>{{ model }}</option>
+                    {% endfor %}
+                </select>
+                {% if not models %}
+                    <p class="notice">Can't reach Ollama. Make sure it is running!</p>
+                {% endif %}
+            </div>
+
+            <div class="field">
+                <label for="style">Style</label>
+                <select id="style" name="style">
+                    {% for style in styles %}
+                        <option value="{{ style }}" {% if style == "clean_word" %}selected{% endif %}>{{ style }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="field">
+                <label for="platform">Platform</label>
+                <select id="platform" name="platform">
+                    {% for platform in platforms %}
+                        <option value="{{ platform }}">{{ platform }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="field">
+                <label for="count">Names to generate <span class="value" id="count-value">{{ limits["count"][2] }}</span></label>
+                <input type="range" id="count" name="count" step="1" min="{{ limits['count'][0] }}" max="{{ limits['count'][1] }}" value="{{ limits['count'][2] }}">
+            </div>
+
+            <div class="field">
+                <label for="examples">Example names <span class="value" id="examples-value">{{ limits["examples"][2] }}</span></label>
+                <input type="range" id="examples" name="examples" step="1" min="{{ limits['examples'][0] }}" max="{{ limits['examples'][1] }}" value="{{ limits['examples'][2] }}">
+            </div>
+
+            <div class="field">
+                <label for="temperature">Temperature <span class="value" id="temperature-value">{{ limits["temperature"][2] }}</span></label>
+                <input type="range" id="temperature" name="temperature" step="0.1" min="{{ limits['temperature'][0] }}" max="{{ limits['temperature'][1] }}" value="{{ limits['temperature'][2] }}">
+            </div>
+
+            <button type="submit" id="generate" class="primary">Generate</button>
+        </form>
+    </section>
+
+    <section class="card">
+        <h2>Results</h2>
+
+        <div id="message"></div>
+        <p id="summary" class="summary"></p>
+
+        <!-- only shown for platforms whose names actually get checked (roblox) -->
+        <label class="toggle" id="filter-row" hidden>
+            <input type="checkbox" id="only-available">
+            Only show available names
+        </label>
+        <p id="no-available" class="empty" hidden>None of these names are available. Try generating again.</p>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Username</th>
+                    <th>Status</th>
+                </tr>
+            </thead>
+            <tbody id="results"></tbody>
+        </table>
+        <p id="empty" class="empty">No names yet. Pick your settings and press Generate.</p>
+    </section>
+</div>
+
+{% endblock %}

@@ -1,0 +1,383 @@
+/* ---------- colors and basics ---------- */
+
+:root {
+    --bg: #f5f5f4;
+    --card: #ffffff;
+    --border: #e4e4e1;
+    --text: #1f2328;
+    --muted: #6b7075;
+    --accent: #2f6f5e;
+    /* hover color is the accent mixed with a bit of black, so it works for any picked color */
+    --accent-hover: color-mix(in srgb, var(--accent) 82%, black);
+    /* text on top of the accent (theme.js switches it to dark for light accent colors) */
+    --accent-text: #ffffff;
+
+    --ok-bg: #e6f2ec;
+    --ok-text: #24694f;
+    --bad-bg: #f8e9e7;
+    --bad-text: #a1392c;
+    --neutral-bg: #efefed;
+    --neutral-text: #5c6166;
+
+    --radius: 8px;
+
+    /* tells the browser to draw dropdowns, sliders and scrollbars in light style */
+    color-scheme: light;
+}
+
+/* ---------- dark theme ---------- */
+
+:root[data-theme="dark"] {
+    --bg: #18191b;
+    --card: #222326;
+    --border: #34363a;
+    --text: #e6e6e3;
+    --muted: #9a9ea3;
+    --accent: #3d8c76;
+
+    --ok-bg: #1e3a2f;
+    --ok-text: #86d1ae;
+    --bad-bg: #3e2522;
+    --bad-text: #f0a197;
+    --neutral-bg: #2d2f33;
+    --neutral-text: #b2b6ba;
+
+    color-scheme: dark;
+}
+
+/* ---------- amoled theme (pure black background) ---------- */
+
+:root[data-theme="amoled"] {
+    --bg: #000000;
+    --card: #0b0b0c;
+    --border: #262628;
+    --text: #e8e8e6;
+    --muted: #94989d;
+    --accent: #3d8c76;
+
+    --ok-bg: #16291f;
+    --ok-text: #86d1ae;
+    --bad-bg: #2e1816;
+    --bad-text: #f0a197;
+    --neutral-bg: #1c1d1f;
+    --neutral-text: #b2b6ba;
+
+    color-scheme: dark;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+/* make sure the hidden attribute always wins over display rules below */
+[hidden] {
+    display: none !important;
+}
+
+body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    font-size: 15px;
+    line-height: 1.5;
+}
+
+.page {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 40px 16px;
+}
+
+/* ---------- header ---------- */
+
+.page-header {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: flex-end;
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+h1 {
+    margin: 0;
+    font-size: 26px;
+    font-weight: 650;
+}
+
+.subtitle {
+    margin: 4px 0 0;
+    color: var(--muted);
+}
+
+h2 {
+    margin: 0 0 16px;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+/* ---------- layout ---------- */
+
+.columns {
+    display: grid;
+    grid-template-columns: 320px 1fr;
+    gap: 20px;
+    align-items: start;
+}
+
+@media (max-width: 760px) {
+    .columns {
+        grid-template-columns: 1fr;
+    }
+}
+
+.card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 20px;
+}
+
+/* ---------- form ---------- */
+
+.field {
+    margin-bottom: 16px;
+}
+
+label {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 6px;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.value {
+    color: var(--muted);
+    font-variant-numeric: tabular-nums;
+}
+
+select {
+    width: 100%;
+    padding: 8px 10px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: var(--card);
+    color: var(--text);
+    font: inherit;
+}
+
+select:focus {
+    outline: 2px solid var(--accent);
+    outline-offset: 1px;
+}
+
+input[type="range"] {
+    width: 100%;
+    accent-color: var(--accent);
+}
+
+/* the big Generate button */
+.primary {
+    width: 100%;
+    margin-top: 4px;
+    padding: 10px;
+    border: none;
+    border-radius: 6px;
+    background: var(--accent);
+    color: var(--accent-text);
+    font: inherit;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.primary:hover {
+    background: var(--accent-hover);
+}
+
+.primary:disabled {
+    opacity: 0.6;
+    cursor: wait;
+}
+
+/* ---------- theme switch and color picker (top right) ---------- */
+
+.appearance {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.theme-switch {
+    display: flex;
+    padding: 3px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--card);
+}
+
+.theme-switch button {
+    padding: 5px 12px;
+    border: none;
+    border-radius: 5px;
+    background: transparent;
+    color: var(--muted);
+    font: inherit;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+.theme-switch button:hover {
+    color: var(--text);
+}
+
+/* the theme that is currently on */
+.theme-switch button[aria-pressed="true"] {
+    background: var(--accent);
+    color: var(--accent-text);
+}
+
+.color-picker {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin: 0;
+    color: var(--muted);
+    font-size: 13px;
+    font-weight: 400;
+}
+
+.color-picker input {
+    width: 34px;
+    height: 30px;
+    padding: 2px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: var(--card);
+    cursor: pointer;
+}
+
+.link-button {
+    padding: 0;
+    border: none;
+    background: none;
+    color: var(--muted);
+    font: inherit;
+    font-size: 13px;
+    text-decoration: underline;
+    cursor: pointer;
+}
+
+.link-button:hover {
+    color: var(--text);
+}
+
+.notice {
+    margin: 6px 0 0;
+    color: var(--bad-text);
+    font-size: 13px;
+}
+
+/* ---------- results ---------- */
+
+#message p {
+    margin: 0 0 12px;
+    padding: 10px 12px;
+    border-radius: 6px;
+    background: var(--bad-bg);
+    color: var(--bad-text);
+}
+
+.summary {
+    margin: 0 0 12px;
+    color: var(--muted);
+    font-size: 14px;
+}
+
+.summary:empty {
+    display: none;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th {
+    text-align: left;
+    padding: 8px 10px;
+    border-bottom: 1px solid var(--border);
+    color: var(--muted);
+    font-size: 13px;
+    font-weight: 500;
+}
+
+td {
+    padding: 9px 10px;
+    border-bottom: 1px solid var(--border);
+}
+
+tbody tr:last-child td {
+    border-bottom: none;
+}
+
+/* hide the table header until there are results */
+table:has(tbody:empty) {
+    display: none;
+}
+
+.empty {
+    margin: 0;
+    color: var(--muted);
+}
+
+/* the "no names yet" line only shows when the table is empty */
+table:not(:has(tbody:empty)) + .empty {
+    display: none;
+}
+
+/* "only show available" checkbox */
+.toggle {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+    font-weight: 400;
+    cursor: pointer;
+}
+
+.toggle input {
+    margin: 0;
+    accent-color: var(--accent);
+}
+
+/* when the filter is on, hide every row that isn't available */
+table.only-available tbody tr:not([data-status="available"]) {
+    display: none;
+}
+
+/* hide the table header too if nothing is left to show */
+table.only-available.none-available {
+    display: none;
+}
+
+.badge {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-size: 13px;
+    background: var(--neutral-bg);
+    color: var(--neutral-text);
+}
+
+.badge.available {
+    background: var(--ok-bg);
+    color: var(--ok-text);
+}
+
+.badge.taken {
+    background: var(--bad-bg);
+    color: var(--bad-text);
+}
